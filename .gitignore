@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+# Node
+node_modules/
+npm-debug.log
+# Secrets / local
+.env
+
+__pycache__/
+*.pyc
+node_modules/
+.env

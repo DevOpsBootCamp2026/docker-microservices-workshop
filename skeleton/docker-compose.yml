@@ -1,0 +1,34 @@
+# docker-compose.yml — YOU WRITE THIS.
+# Wire up FIVE services and TWO networks. Discover the required service names and
+# ports by reading gateway/nginx.conf (proxy targets) and the app source
+# (DB_HOST/REDIS_HOST the services expect).
+#
+# Requirements:
+#   gateway        build ./gateway; publish to your PC (8080:80); frontend-net only
+#   tasks-service  build ./tasks-service; DB_* + REDIS_HOST env; on BOTH networks;
+#                  start after db is healthy
+#   users-service  build ./users-service; same idea, PORT=3000
+#   db             official postgres image; POSTGRES_* env; named volume; healthcheck;
+#                  backend-net only
+#   redis          official redis image; named volume; backend-net only
+#
+# Remember: the gateway must NOT be able to reach db/redis (network separation).
+services:
+
+  gateway:
+    # TODO
+
+  tasks-service:
+    # TODO
+
+  users-service:
+    # TODO
+
+  db:
+    # TODO
+
+  redis:
+    # TODO
+
+# TODO: declare frontend-net and backend-net
+# TODO: declare the named volumes

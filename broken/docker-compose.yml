@@ -1,0 +1,97 @@
+# =============================================================================
+# Microservices stack: one gateway, two services, two shared data stores.
+# Two networks enforce isolation: the gateway can NEVER reach the database.
+# Start it all:  docker compose up --build   ->  http://localhost:8080
+# =============================================================================
+services:
+
+  # ---- API GATEWAY: the only service exposed to your computer ----------------
+  gateway:
+    build: ./gateway
+    ports:
+      - "8080:80"                 # HOST:CONTAINER -> http://localhost:8080
+    depends_on:
+      - tasks-service
+      - users-service
+    networks:
+      - frontend-net             # only on the front network
+    restart: unless-stopped
+
+  # ---- TASKS microservice (Python/Flask) -------------------------------------
+  tasks-service:
+    build: ./tasks-service
+    environment:
+      DB_HOST: db
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      REDIS_HOST: redis
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - frontend-net             # reachable by the gateway
+      - backend-net              # reaches db + redis
+    restart: unless-stopped
+
+  # ---- USERS microservice (Node/Express) -------------------------------------
+  users-service:
+    build: ./users-service
+    environment:
+      DB_HOST: localhost
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      REDIS_HOST: redis
+      PORT: 3000
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - frontend-net
+      - backend-net
+    restart: unless-stopped
+
+  # ---- Shared PostgreSQL -----------------------------------------------------
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - backend-net              # NOT on frontend-net: the gateway can't see it
+    restart: unless-stopped
+
+  # ---- Shared Redis ----------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend-net
+    restart: unless-stopped
+
+# Two isolated networks. A container can only talk to services on a network it
+# is attached to. This is how you stop the public-facing gateway from ever
+# reaching the database directly.
+networks:
+  frontend-net:
+    driver: bridge
+  backend-net:
+    driver: bridge
+
+volumes:
+  db_data:
+  redis_data:

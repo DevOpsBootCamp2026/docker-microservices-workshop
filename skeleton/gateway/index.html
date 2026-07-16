@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Microservices Demo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Microservices Demo</h1>
+    <p class="flow">Browser → <b>gateway</b> → (<span class="u">users-service</span> · <span class="t">tasks-service</span>) → Postgres + Redis</p>
+  </header>
+  <main>
+    <section class="card">
+      <h2>Users <span class="src" id="users-src"></span></h2>
+      <form id="user-form">
+        <input id="u-name" placeholder="name" required />
+        <input id="u-email" placeholder="email (optional)" />
+        <button>Add user</button>
+      </form>
+      <ul id="users"></ul>
+    </section>
+
+    <section class="card">
+      <h2>Tasks <span class="src" id="tasks-src"></span></h2>
+      <form id="task-form">
+        <input id="t-title" placeholder="task title" required />
+        <button>Add task</button>
+      </form>
+      <ul id="tasks"></ul>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
