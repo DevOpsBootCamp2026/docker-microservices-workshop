@@ -6,3 +6,13 @@
 #   TODO 3: copy index.html, app.js, style.css into the web root
 #   TODO 4: document the port
 #   TODO ?: does this base image already start Nginx? do you need a CMD?
+
+FROM nginx:alpine
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+COPY index.html app.js style.css /usr/share/nginx/html/ 
+
+EXPOSE 80
+
+

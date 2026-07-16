@@ -16,19 +16,72 @@
 services:
 
   gateway:
-    # TODO
+    build: ./gateway
+    ports:
+      - "8080:80"
+    depends_on:
+      - tasks-service
+      - users-service
+    networks:
+      - frontend-net
 
   tasks-service:
-    # TODO
+    build: ./tasks-service
+    environment:
+      - DB_HOST: db
+      - DB_NAME: $(DB_NAME)
+      - DB_USER: $(DB_USER)
+      - DB_PASSWORD: $(DB_PASSWORD)
+      - REDIS_HOST: redis
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - frontend-net
+      - backend-net
+
 
   users-service:
-    # TODO
+    build: ./users-service
+    environment:
+      - DB_HOST: db
+      - DB_NAME: $(DB_NAME)
+      - DB_USER: $(DB_USER)
+      - DB_PASSWORD: $(DB_PASSWORD)
+      - PORT=3000
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - frontend-net
+      - backend-net
 
   db:
-    # TODO
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=$(DB_NAME)
+      - POSTGRES_USER=$(DB_USER)
+      - POSTGRES_PASSWORD=$(DB_PASSWORD)
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}" ]
 
   redis:
-    # TODO
+    image: redis:7-alpine
+    volumes:
+      - redis-data:/data
+    networks:
+      - backend-net
 
-# TODO: declare frontend-net and backend-net
-# TODO: declare the named volumes
+networks:
+  frontend-net:
+    driver: bridge
+  backend-net:
+    driver: bridge
+    
+volumes:
+  db-data:
+  redis-data:
