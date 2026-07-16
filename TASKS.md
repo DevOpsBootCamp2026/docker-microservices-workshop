@@ -1,9 +1,9 @@
-# Docker Microservices — 3-Hour Student Session
+# Docker Microservices — Student Session
 
-You will work with a small microservices app: an Nginx **gateway** in front of a
-Python **tasks-service** and a Node **users-service**, sharing **PostgreSQL** and
-**Redis** — five containers, two networks. You build it, break-fix a copy, and run
-ops drills.
+You will containerise and run a small microservices app: an Nginx **gateway** in
+front of a Python **tasks-service** and a Node **users-service**, sharing
+**PostgreSQL** and **Redis** — five containers, two networks. The app code already
+works; **you write the Docker files** to make it run.
 
 **Requirements:** Docker Desktop with the WSL2 backend (or Docker engine in WSL).
 Check: `docker --version` and `docker compose version`.
@@ -11,27 +11,16 @@ Check: `docker --version` and `docker compose version`.
 **Reference while you work:** `docs/00-architecture.md` (the big picture),
 `docs/06` and `docs/07` (command references), `docs/08` (troubleshooting).
 
-**Timings (180 min)**
-
-| Time | Block |
-|------|-------|
-| 0:00–0:10 | 0. Setup & orientation |
-| 0:10–1:20 | A. Build the missing Dockerfiles + compose (`skeleton/`) |
-| 1:20–1:30 | Break |
-| 1:30–2:20 | B. Break-fix the broken stack (`broken/`) |
-| 2:20–2:55 | C. Ops drills |
-| 2:55–3:00 | Wrap-up |
-
 ---
 
 ## Block 0 — Setup (10 min)
 1. Clone this repo and `cd` into it.
-2. Skim `docs/00-architecture.md`.
+2. Skim `docs/00-architecture.md` to see how the 5 containers connect.
 3. Confirm Docker works: `docker run --rm hello-world`.
 
 ---
 
-## Block A — Build the container recipes (70 min)
+## Block A — Build the container recipes (main task)
 Folder: `skeleton/`. The **app code works**; the Docker files are TODO stubs. Write
 them so `docker compose up --build` brings up all five services.
 
@@ -62,22 +51,8 @@ them so `docker compose up --build` brings up all five services.
 
 ---
 
-## Block B — Break-fix (50 min)
-Folder: `broken/` (see its own `README.md`). Same app, but we planted **4 bugs**. Get
-it fully working: build succeeds, all 5 services Up, page styled, both panels work.
-
-Use the diagnosis ladder every time:
-```
-docker compose ps  →  docker compose logs <svc>  →  docker compose exec <svc> sh
-→  test the dependency (curl/ping)  →  docker inspect <svc>
-```
-For each bug write down: the symptom, the command that revealed it, and the fix. Not
-all bugs are Docker bugs. Hints are in `docs/08-troubleshooting-scenarios.md`.
-
----
-
-## Block C — Ops drills (35 min)
-On your working stack, run each and note what you observe.
+## Block B — Ops drills (once your stack is up)
+Run each on your working stack and note what you observe.
 
 1. **Logs:** `docker compose logs -f users-service` — add a user, watch it.
 2. **Shell in:** `docker compose exec db psql -U app -d appdb -c "SELECT * FROM tasks;"`
@@ -90,7 +65,7 @@ On your working stack, run each and note what you observe.
 
 ---
 
-## Wrap-up (5 min)
+## Wrap-up
 Be ready to answer:
 - Why can the gateway reach the services but not the database?
 - What does `EXPOSE` do — and not do?

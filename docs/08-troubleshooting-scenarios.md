@@ -2,8 +2,8 @@
 
 Containers fail. The skill is not "never break things" — it's **reading the system
 to find out why**. This doc gives a repeatable method, then eight concrete
-scenarios written as *Symptom → Diagnose → Cause → Fix*. Great for a live demo and
-the basis of the break-fix student tasks.
+scenarios written as *Symptom → Diagnose → Cause → Fix*. Use it whenever your stack
+misbehaves while you build it.
 
 ---
 

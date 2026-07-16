@@ -1,27 +1,23 @@
 # Docker Microservices — Student Project
 
-A hands-on Docker session. You'll containerise and operate a small microservices
-app: an Nginx **gateway** → a Python **tasks-service** + a Node **users-service** →
+A hands-on Docker session. You'll containerise and run a small microservices app:
+an Nginx **gateway** → a Python **tasks-service** + a Node **users-service** →
 shared **PostgreSQL** + **Redis**.
 
 ## Start here
-Open **`TASKS.md`** — it's a 3-hour session in three blocks:
-
-- **Block A — Build:** `skeleton/` has the working app but blank Dockerfiles and
-  `docker-compose.yml`. You write them.
-- **Block B — Break-fix:** `broken/` is the same app with 4 planted bugs to find and fix.
-- **Block C — Ops drills:** logs, exec, scale, kill/recover, `down` vs `down -v`.
+Open **`TASKS.md`**. The app code in `skeleton/` already works — your job is to write
+the Docker files (two Dockerfiles + `docker-compose.yml`) so the whole stack runs
+with `docker compose up --build`, then run the ops drills.
 
 ## Reference docs (`docs/`)
-- `00-architecture.md` — how the 5 containers fit together.
+- `00-architecture.md` — how the 5 containers fit together (read first).
 - `06-docker-cli-single-container.md` — commands for one image/container.
 - `07-docker-compose-commands.md` — commands for the whole stack.
-- `08-troubleshooting-scenarios.md` — how to diagnose failures (use in Block B).
+- `08-troubleshooting-scenarios.md` — how to diagnose failures while building.
 
 ## Layout
 ```
-skeleton/   Block A — working app, Docker files to write
-broken/     Block B — same app + 4 bugs to fix
+skeleton/   working app + blank Dockerfiles/compose for you to write
 docs/       reference material
 TASKS.md    the session
 ```
